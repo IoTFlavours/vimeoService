@@ -28,7 +28,12 @@ app.post('/upload', (req, res) => {
       function (uri) {
         fs.unlink(filePath, (err) => {
           if (err) res.status(400).send('Error uploading file');
-          res.json({video: uri});
+          client.request({
+            path: uri,
+          }, (error, response) => {
+            if (error) res.status(400).send('Error uploading file');
+            res.json({video: response.files[0].link});
+          });
         });
       },
       function () {},
